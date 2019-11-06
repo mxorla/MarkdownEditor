@@ -1,0 +1,27 @@
+version: '2'
+
+services:
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "8000:80"
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - web
+      - backend
+      - redis
+  web:
+    image: mxorla/markdown-editor:frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+  backend:
+    image: mxorla/markdown-editor:backend
+    ports:
+      - "5000:5000"
+    depends_on:
+      - redis
+  redis:
+    image: redis:alpine
