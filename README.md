@@ -16,7 +16,7 @@
   >  Redis is used to store entries 
 
 if you have docker installed run: 
-`docker run -name redis-me -p 6379:6379 redis:alpine`
+`docker run --name redis-me -p 6379:6379 redis:alpine`
 
 ####  Run Backend
 Navigate to ~/MarkdownEditor/backend and run 
