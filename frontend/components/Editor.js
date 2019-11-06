@@ -14,12 +14,16 @@ const textareaStyle = {
   resize: 'none',
   border: 'none'
 }
+const placeholder = `# Welcome to Markdown Editor!
+#### add your markdown
+you can Create | Edit | Delete
+`
 
 export default class Editor extends React.Component {
   render() {
     return (
       <div style={layoutStyle}>
-        <Input type="textarea" style={textareaStyle} value={this.props.markdown} onChange={e => this.props.onChange(e.target.value)} />
+        <Input type="textarea" style={textareaStyle} value={this.props.markdown} placeholder={placeholder} onChange={e => this.props.onChange(e.target.value)} />
       </div>
 
     )
