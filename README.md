@@ -29,3 +29,7 @@ Navigate to ~/MarkdownEditor/frontend and run
 `npm install && npm run build && npm start`
 
 > Should be start application on localhost:3000
+
+
+### Video DEMO:
+https://drive.google.com/file/d/1sgoGRLj0C8vHiSaAhBovYoiF8c7Sasqa/view?usp=sharing
