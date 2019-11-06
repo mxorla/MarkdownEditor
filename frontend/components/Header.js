@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Badge, Row, Col } from 'reactstrap';
+import { Row, Col } from 'reactstrap';
 
  
 

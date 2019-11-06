@@ -1,10 +1,9 @@
 import * as superagent from 'superagent';
 import { Button, FormGroup, Form, Label, Input, Row, Col } from 'reactstrap';
 import Layout from '../../components/Layout';
-import Link from 'next/link';
 import Router from 'next/router';
 
-
+const textareaStyle = { height: 300, resize: 'none' }
 export default class AddOrUpdate extends React.Component {
   constructor() {
     super();
@@ -15,7 +14,7 @@ export default class AddOrUpdate extends React.Component {
   }
   state = {}
   handleClick = async () => {
-     const { title, markdown } = this.state;
+    const { title, markdown } = this.state;
     await superagent.post(`http://localhost:5000/api/document`)
       .send({ title, markdown })
       .then(res => {
@@ -41,12 +40,12 @@ export default class AddOrUpdate extends React.Component {
         <Form>
           <FormGroup>
             <Label>Title</Label>
-            <Input type="text" value={this.state.title} placeholder="add a title" onChange={e => this.handleChangeTitle(e.target.value)} />
+            <Input type="text" value={this.state.title} placeholder="Add a title..." onChange={e => this.handleChangeTitle(e.target.value)} />
           </FormGroup>
 
           <FormGroup>
             <Label >Markdown</Label>
-            <Input type="textarea" style={{height:300, resize:'none'}} value={this.state.markdown} placeholder="add a markdown" onChange={e => this.handleChangeMarkdown(e.target.value)} />
+            <Input type="textarea" style={textareaStyle} value={this.state.markdown} placeholder="Add a markdown..." onChange={e => this.handleChangeMarkdown(e.target.value)} />
           </FormGroup>
         </Form>
         <Row>

@@ -2,7 +2,7 @@ import Sidebar from '../components/Sidebar';
 import Editor from '../components/Editor';
 import Preview from '../components/Preview';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Toast, ToastBody, ToastHeader, Spinner, Row, Col, Button } from 'reactstrap';
+import { Row, Col, Button } from 'reactstrap';
 import * as superagent from 'superagent';
 import Layout from '../components/Layout';
 import { toast } from 'react-toastify';
@@ -10,6 +10,9 @@ import 'react-toastify/dist/ReactToastify.css';
 
 
 toast.configure()
+const colStyle = { paddingLeft: 0, paddingRight: 0 }
+const rowButtonsStyle = { marginTop: 15 }
+const colButtonsStyle = { size: 1, offset: 2 }
 
 export default class MarkdownEditor extends React.Component {
   constructor(props) {
@@ -29,7 +32,7 @@ export default class MarkdownEditor extends React.Component {
     });
   };
 
-  handleSelect = (document) => {
+  handleSelect = (document) => { 
     this.setState({
       selectedId: document.id,
       title: document.title,
@@ -40,18 +43,20 @@ export default class MarkdownEditor extends React.Component {
   handleEdition = async () => {
     var self = this;
     const { selectedId, title, markdown } = this.state;
-    await superagent.put(`http://localhost:5000/api/document/${selectedId}`)
-      .send({ title, markdown })
-      .then(async res => {
-        const resp = await MarkdownEditor.getInitialProps()
-        toast.success(<this.Msg title={title} subtitle="Edited successfully!" />, { autoClose: 2000 });
-        self.setState({
-          documents: resp.documents
+    if (selectedId) {
+      await superagent.put(`http://localhost:5000/api/document/${selectedId}`)
+        .send({ title, markdown })
+        .then(async res => {
+          const resp = await MarkdownEditor.getInitialProps()
+          toast.success(<this.Msg title={title} subtitle="Edited successfully!" />, { autoClose: 2000 });
+          self.setState({
+            documents: resp.documents
 
+          });
+        }).catch(() => {
+          toast.error("Oops something wrong!", { autoClose: 2000 });
         });
-      }).catch(() => {
-        toast.error("Oops something wrong!", { autoClose: 2000 });
-      })
+    }
   }
 
 
@@ -59,20 +64,22 @@ export default class MarkdownEditor extends React.Component {
   handleDelete = async () => {
     var self = this;
     const { selectedId, title } = this.state;
-    await superagent.del(`http://localhost:5000/api/document/${selectedId}`)
-      .then(async res => {
-        const resp = await MarkdownEditor.getInitialProps()
-        toast.success(<this.Msg title={title} subtitle="Deleted successfully!" />, { autoClose: 2000 });
-        const document = resp.documents[0];
-        self.setState({
-          documents: resp.documents,
-          selectedId: document && document.id,
-          title: document ? document.title : '',
-          markdown: document ? document.markdown : ''
+    if (selectedId) {
+      await superagent.del(`http://localhost:5000/api/document/${selectedId}`)
+        .then(async res => {
+          const resp = await MarkdownEditor.getInitialProps()
+          toast.success(<this.Msg title={title} subtitle="Deleted successfully!" />, { autoClose: 2000 });
+          const document = resp.documents[0];
+          self.setState({
+            documents: resp.documents,
+            selectedId: document && document.id,
+            title: document ? document.title : '',
+            markdown: document ? document.markdown : ''
+          });
+        }).catch(() => {
+          toast.error("Oops something wrong!", { autoClose: 2000 });
         });
-      }).catch(() => {
-        toast.error("Oops something wrong!", { autoClose: 2000 });
-      })
+    }
   }
 
   Msg = ({ title, subtitle }) => (
@@ -86,19 +93,19 @@ export default class MarkdownEditor extends React.Component {
     return (
       <Layout>
         <Row>
-          <Col xs="2" style={{ paddingLeft: 0, paddingRight: 0 }}>
+          <Col xs="2" style={colStyle}>
             <Sidebar documents={this.state.documents} selectedId={this.state.selectedId} onSelect={this.handleSelect} />
           </Col>
-          <Col xs="5" style={{ paddingLeft: 0, paddingRight: 0 }}>
+          <Col xs="5" style={colStyle}>
             <Editor markdown={this.state.markdown} onChange={this.handleChange} />
           </Col>
-          <Col xs="5" style={{ paddingLeft: 0, paddingRight: 0 }}>
+          <Col xs="5" style={colStyle}>
             <Preview markdown={this.state.markdown} />
           </Col>
         </Row>
 
-        <Row style={{ marginTop: 15 }}>
-          <Col xs={{ size: 1, offset: 2 }}>
+        <Row style={rowButtonsStyle}>
+          <Col xs={colButtonsStyle}>
             <Button color="primary" block onClick={this.handleEdition}>Save</Button>
           </Col>
           <Col xs="1">
